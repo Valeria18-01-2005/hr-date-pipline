@@ -1,0 +1,12 @@
+.idea/
+__pycache__/
+*.pyc
+.venv/
+venv_linux/
+
+Lib/
+Scripts/
+include/
+pyvenv.cfg
+
+.env

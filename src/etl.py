@@ -4,7 +4,7 @@ from src.database import engine, recreate_tables
 
 
 def run_etl():
-    print("ETL-пайплайн запущен...")
+    print("ETL-пайплайн запущен")
 
 
     df = pd.read_csv(DATA_PATH)
@@ -16,10 +16,8 @@ def run_etl():
     if 'length_of_service' in df.columns:
         df['length_of_service'] = pd.to_numeric(df['length_of_service'], errors='coerce').astype('Int64')
 
-    # 3. Пересоздаем чистые таблицы в базе
     recreate_tables()
 
-    # 4. Факторизация справочников
     df['business_unit_id'], _ = pd.factorize(df['BUSINESS_UNIT'])
     df['department_id'], _ = pd.factorize(df['department_name'])
     df['id_city'], _ = pd.factorize(df['city_name'])
@@ -28,7 +26,7 @@ def run_etl():
     df['id_term'], _ = pd.factorize(df['termtype_desc'])
     df['termreason_id'], _ = pd.factorize(df['termreason_desc'])
 
-    # 5. Заливка справочников и фактов в базу
+
     df[['business_unit_id', 'BUSINESS_UNIT']].drop_duplicates().rename(
         columns={'BUSINESS_UNIT': 'business_unit_name'}
     ).to_sql('business_unit', con=engine, if_exists='append', index=False)
